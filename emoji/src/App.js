@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Emojis from './Emojis.js';
-import emojiList from './emojiList.json'
+import emojiList from './emojiList.json';
+import { Debounce } from 'react-throttle';
 
 
 class App extends Component { 
@@ -27,7 +27,7 @@ class App extends Component {
           if (input === '') return; 
           else return emojiObject;
         }
-      })
+      });
 
       this.setState({
         input: input,
@@ -41,26 +41,28 @@ class App extends Component {
 
       emojiElement.style.backgroundColor = "red";
       //window.prompt("Copy to clip board: Ctrl+C Enter", selectedEmoji)
-      var textArea = document.createElement('textarea');
-      textArea.textContent = selectedEmoji;
-      document.body.appendChild(textArea);
-      textArea.select();
+       var textArea = document.createElement('textarea');
+       textArea.textContent = selectedEmoji;
+       document.body.appendChild(textArea);
+       textArea.select();
 
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
+       document.execCommand('copy');
+       document.body.removeChild(textArea);
     }
 
     render () {
         return (
             <div className="app">
-                <input 
-                  className="searchBar"
-                  placeholder="Search Emoji" 
-                  onChange={this.inputHandler}
-                />
+                <Debounce time="300" handler="onChange"> 
+                  <input 
+                    className="searchBar"
+                    placeholder="Search Emoji" 
+                    onChange={this.inputHandler}
+                  />
+                </Debounce>
                 <Emojis 
-                parentState ={ this.state.list }
-                handleEmojiClick ={this.handleEmojiClick}
+                  parentState ={this.state.list}
+                  handleEmojiClick ={this.handleEmojiClick}
                 />
             </div>
         )
